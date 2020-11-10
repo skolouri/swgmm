@@ -45,15 +45,26 @@ def gaussian1d(t,mu,sigma):
     return (1.0/(sigma*np.sqrt(2*np.pi)))*np.exp(-((t-mu)**2)/(2*sigma**2))
 
 def gmm1d(t,mu,sigma,alpha):
-    gmm=np.zeros_like(t)
+    out=np.zeros_like(t)
     for i in range(len(mu)):
-        gmm+=alpha[i]*gaussian1d(t,mu[i],sigma[i])
-    return gmm/gmm.sum()
+        out+=alpha[i]*gaussian1d(t,mu[i],sigma[i])
+    return out/out.sum()
+
+
 def gauss2D(X,mu,Sigma):
     P = np.linalg.det(Sigma) ** -.5 ** (2 * np.pi) ** (-X.shape[1]/2.) \
                 * np.exp(-.5 * np.einsum('ij, ij -> i',\
                         X - mu, np.dot(np.linalg.inv(Sigma) , (X - mu).T).T ) ) 
     return P
+
+def sample_gmm(alphas,means,sigmas,N):    
+    out=np.zeros((N,))
+    label=np.zeros((N,))
+    for n in range(N):
+        ind=np.random.choice(np.arange(len(alphas)),p=alphas)
+        out[n]=np.random.normal(loc=means[ind],scale=sigmas[ind])
+        label[n]=ind
+    return out,label
 
 def generateTheta(L,d):
     theta=np.zeros((L,d))
