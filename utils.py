@@ -52,7 +52,7 @@ def gmm1d(t,mu,sigma,alpha):
 
 
 def gauss2D(X,mu,Sigma):
-    P = np.linalg.det(Sigma) ** -.5 ** (2 * np.pi) ** (-X.shape[1]/2.) \
+    P = np.linalg.det(Sigma) ** -.5 * (2 * np.pi) ** (-X.shape[1]/2.) \
                 * np.exp(-.5 * np.einsum('ij, ij -> i',\
                         X - mu, np.dot(np.linalg.inv(Sigma) , (X - mu).T).T ) ) 
     return P
@@ -162,4 +162,4 @@ def projectPD(A):
     eigval, eigvec = np.linalg.eig(A)
     Q = np.matrix(eigvec)
     xdiag = np.matrix(np.diag(np.maximum(eigval, 0)))
-    return Q*xdiag*Q.T
+    return Q@xdiag@Q.T
